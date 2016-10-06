@@ -38,3 +38,6 @@ bash nagclient.sh centos
 
 bash nagclient.sh ubuntu
 (For Installing on Ubuntu/Debian OS)
+
+#NOTE
+Make sure that you open port 5666 or any other from within your Firewall rules. In next version I will add functionality to the application to detect firewall and add proper rule.
