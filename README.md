@@ -22,8 +22,8 @@ git clone https://github.com/nemke82/nagclient <BR>
 make file executable: chmod a+rwx nagclient.sh <BR>
 Next type: bash nagclient.sh <BR>
 
-2) wget -c https://raw.githubusercontent.com/nemke82/nagclient/master/nagclient.sh
-chmod a+rwx nagclient.sh
+2) wget -c https://raw.githubusercontent.com/nemke82/nagclient/master/nagclient.sh <BR>
+chmod a+rwx nagclient.sh <BR>
 bash nagclient.sh <BR>
 
 3) curl -s https://raw.githubusercontent.com/nemke82/nagclient/master/nagclient.sh | bash /dev/stdin
