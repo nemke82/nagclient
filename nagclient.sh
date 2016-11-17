@@ -13,6 +13,16 @@ yum -y remove lm_sensors &&
 echo "Installing fresh installation"
 osversion=$(cat /etc/redhat-release | grep -oE '[0-9]+\.[0-9]+'|cut -d"." -f1)
 echo ${osversion}
+
+if [ ${osversion} -eq 5 ];then
+echo "Checking/Installing Epel repository, Nagios Plugins, Nrpe, Lmsensors and Hdd temperateure module."
+echo "Starting nrpe daemon and adding it to the chkconfig for autoboot functionality."
+yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-5.noarch.rpm
+yum -y --enablerepo="epel" install nagios-plugins-all nrpe lm_sensors hddtemp &&
+service nrpe restart &&
+chkconfig nrpe on
+
+
 if [ ${osversion} -eq 6 ];then
 echo "Checking/Installing Epel repository, Nagios Plugins, Nrpe, Lmsensors and Hdd temperateure module."
 echo "Starting nrpe daemon and adding it to the chkconfig for autoboot functionality."
