@@ -2,6 +2,15 @@
 #Author: Nemanja Djuric
 
 #Function defs
+# Check for root, quit if not present with a warning.
+	if [ "$(id -u)" != "0" ];
+	then
+		echo "\nScript needs to be run as root. Please elevate and run again!"
+		exit 1
+	else
+		echo "\nScript running as root. Starting..."
+	fi
+
 function setup_centos(){
 
 #Begin of Epel-repo install block. Version check and if exist.
@@ -17,24 +26,25 @@ echo ${osversion}
 if [ ${osversion} -eq 5 ];then
 echo "Checking/Installing Epel repository, Nagios Plugins, Nrpe, Lmsensors and Hdd temperateure module."
 echo "Starting nrpe daemon and adding it to the chkconfig for autoboot functionality."
-yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-5.noarch.rpm
+cd /root && wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-5.noarch.rpm && rpm -Uvh epel-release-latest-5*.rpm &&
 yum -y --enablerepo="epel" install nagios-plugins-all nrpe lm_sensors hddtemp &&
 service nrpe restart &&
 chkconfig nrpe on
-
+fi
 
 if [ ${osversion} -eq 6 ];then
 echo "Checking/Installing Epel repository, Nagios Plugins, Nrpe, Lmsensors and Hdd temperateure module."
 echo "Starting nrpe daemon and adding it to the chkconfig for autoboot functionality."
-yum -y install http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+cd /root && wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm	&& rpm -Uvh epel-release-latest-6*.rpm &&
 yum -y --enablerepo="epel" install nagios-plugins-all nrpe lm_sensors hddtemp &&
 service nrpe restart &&
 chkconfig nrpe on
+fi
 
-elif [ ${osversion} -eq 7 ];then
+if [ ${osversion} -eq 7 ];then
 echo "Checking/Installing Epel repository CentOS 7, Nagios Plugins, Nrpe, Lmsensors and Hdd temperateure module."
 echo "Starting nrpe daemon and adding it to the chkconfig for autoboot functionality."
-yum -y install http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+cd /root && wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && rpm -Uvh epel-release-latest-7*.rpm &&
 yum -y --enablerepo="epel" install nagios-plugins-all nrpe lm_sensors hddtemp &&
 systemctl restart nrpe &&
 systemctl enable nrpe
@@ -189,4 +199,3 @@ if [ ! -z $1 ];then
 else
 	auto_setup
 fi
-
