@@ -15,9 +15,9 @@ function setup_centos(){
 
 #Begin of Epel-repo install block. Version check and if exist.
 echo "Welcome to the Nagios Client installer. First, lets check if installation exist and remove it."
-yum -y remove nagios-plugins-all &&
-yum -y remove nrpe &&
-yum -y remove lm_sensors &&
+yum -y remove nagios-plugins-all
+yum -y remove nrpe
+yum -y remove lm_sensors
 
 echo "Installing fresh installation"
 osversion=$(cat /etc/redhat-release | grep -oE '[0-9]+\.[0-9]+'|cut -d"." -f1)
@@ -26,27 +26,33 @@ echo ${osversion}
 if [ ${osversion} -eq 5 ];then
 echo "Checking/Installing Epel repository, Nagios Plugins, Nrpe, Lmsensors and Hdd temperateure module."
 echo "Starting nrpe daemon and adding it to the chkconfig for autoboot functionality."
-cd /root && wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-5.noarch.rpm && rpm -Uvh epel-release-latest-5*.rpm &&
-yum -y --enablerepo="epel" install nagios-plugins-all nrpe lm_sensors hddtemp &&
-service nrpe restart &&
+cd /root
+wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-5.noarch.rpm
+rpm -Uvh epel-release-latest-5*.rpm
+yum -y --enablerepo="epel" install nagios-plugins-all nrpe lm_sensors hddtemp
+service nrpe restart
 chkconfig nrpe on
 fi
 
 if [ ${osversion} -eq 6 ];then
 echo "Checking/Installing Epel repository, Nagios Plugins, Nrpe, Lmsensors and Hdd temperateure module."
 echo "Starting nrpe daemon and adding it to the chkconfig for autoboot functionality."
-cd /root && wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm	&& rpm -Uvh epel-release-latest-6*.rpm &&
-yum -y --enablerepo="epel" install nagios-plugins-all nrpe lm_sensors hddtemp &&
-service nrpe restart &&
+cd /root
+wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+rpm -Uvh epel-release-latest-6*.rpm
+yum -y --enablerepo="epel" install nagios-plugins-all nrpe lm_sensors hddtemp
+service nrpe restart
 chkconfig nrpe on
 fi
 
 if [ ${osversion} -eq 7 ];then
 echo "Checking/Installing Epel repository CentOS 7, Nagios Plugins, Nrpe, Lmsensors and Hdd temperateure module."
 echo "Starting nrpe daemon and adding it to the chkconfig for autoboot functionality."
-cd /root && wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && rpm -Uvh epel-release-latest-7*.rpm &&
-yum -y --enablerepo="epel" install nagios-plugins-all nrpe lm_sensors hddtemp &&
-systemctl restart nrpe &&
+cd /root
+wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+rpm -Uvh epel-release-latest-7*.rpm
+yum -y --enablerepo="epel" install nagios-plugins-all nrpe lm_sensors hddtemp
+systemctl restart nrpe
 systemctl enable nrpe
 echo "NOTE: On few CentOS 7 version's I've noticed that PID in nrpe.cfg needs to be changed from /var/run/nrpe.pid to /var/run/nrpe/nrpe.pid"
 echo "      Make sure to check systemctl status nrpe when this is installed to check if daemon is started properly."
@@ -60,26 +66,26 @@ echo "Please enter type as (1 - cloud, 2 - vz or 3 - dedi):"
 read stype
 
 if [ ${stype} -eq 1 ];then
-rm -f /etc/nagios/nrpe.cfg &&
+rm -f /etc/nagios/nrpe.cfg ;
 echo "Getting nrpe.cfg file with installed commands.."
 wget -O /etc/nagios/nrpe.cfg http://repo.nemanja.io/nrpe.cfg
 echo "Complete!"
 fi
 if [ ${stype} -eq 2 ];then
-rm -f /etc/nagios/nrpe.cfg &&
+rm -f /etc/nagios/nrpe.cfg ;
 echo "Getting nrpe.cfg file with installed commands.."
 wget -O /etc/nagios/nrpe.cfg http://repo.nemanja.io/nrpe-vz.cfg
 echo "Complete!"
 fi
 if [ ${stype} -eq 3 ];then
-rm -f /etc/nagios/nrpe.cfg &&
+rm -f /etc/nagios/nrpe.cfg ;
 echo "Getting nrpe.cfg file with installed commands.."
 wget -O /etc/nagios/nrpe.cfg http://repo.nemanja.io/nrpe-dedi.cfg &&
 echo "Complete!"
 fi
 
 echo "Adding Nagios username to /etc/sudoers file with limited access only to /usr/lib64/nagios/plugins/ folder."
-sed -i '$ a nagios ALL=(ALL) NOPASSWD: /usr/lib64/nagios/plugins/' /etc/sudoers &&
+sed -i '$ a nagios ALL=(ALL) NOPASSWD: /usr/lib64/nagios/plugins/' /etc/sudoers ;
 echo "Complete!"
 
 echo "Removing requiretty from /etc/sudoers.. Sudo and Nagios cannot work with this together."
@@ -87,8 +93,8 @@ sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
 echo "Complete!"
 
 echo "Removing current plugins installed in /usr/lib64/nagios/plugins folder and installing ours."
-rm -f /usr/lib64/nagios/plugins/* &&
-wget -O /etc/nagios/plugins.tar http://repo.nemanja.io/plugins.tar &&
+rm -f /usr/lib64/nagios/plugins/* ;
+wget -O /etc/nagios/plugins.tar http://repo.nemanja.io/plugins.tar ;
 tar -xvf /etc/nagios/plugins.tar -C /usr/lib64/nagios/plugins
 echo "Complete!"
 
@@ -103,13 +109,13 @@ echo "Thank you for using Nagios Client installer for CentOS/RHEL."
 setup_ubuntu(){
 echo "Welcome to the Nagios Client installer (for Debian/Ubuntu). First, lets check if installation exist and remove it."
 if [ ! -d /etc/nagios ];then
-apt-get -y remove nagios-nrpe-server &&
-apt-get -y remove nagios-plugins &&
+apt-get -y remove nagios-nrpe-server ;
+apt-get -y remove nagios-plugins ;
 apt-get -y remove lm-sensors
 else
 echo "Checking/Installing Nagios Plugins, Nrpe, Lmsensors and Hdd temperateure module."
 echo "Starting nrpe daemon."
-apt-get -y install nagios-nrpe-server nagios-plugins lm-sensors unzip vim hddtemp &&
+apt-get -y install nagios-nrpe-server nagios-plugins lm-sensors unzip vim hddtemp ;
 echo "Starting nrpe daemon."
 
 fi
@@ -120,13 +126,13 @@ echo "Please enter type as (1 - cloud, 2 - vz or 3 - dedi):"
 read stype
 
 if [ ${stype} -eq 1 ];then
-rm -f /etc/nagios/nrpe.cfg &&
+rm -f /etc/nagios/nrpe.cfg ;
 echo "Getting nrpe.cfg file with installed commands.."
 wget -O /etc/nagios/nrpe.cfg http://repo.nemanja.io/nrpe.cfg
 echo "Complete!"
 fi
 if [ ${stype} -eq 2 ];then
-rm -f /etc/nagios/nrpe.cfg &&
+rm -f /etc/nagios/nrpe.cfg ;
 echo "Getting nrpe.cfg file with installed commands.."
 wget -O /etc/nagios/nrpe.cfg http://repo.nemanja.io/nrpe-vz.cfg
 echo "Complete!"
@@ -134,12 +140,12 @@ fi
 if [ ${stype} -eq 3 ];then
 rm -f /etc/nagios/nrpe.cfg &&
 echo "Getting nrpe.cfg file with installed commands.."
-wget -O /etc/nagios/nrpe.cfg http://repo.nemanja.io/nrpe-dedi.cfg &&
+wget -O /etc/nagios/nrpe.cfg http://repo.nemanja.io/nrpe-dedi.cfg ;
 echo "Complete!"
 fi
 
 echo "Adding Nagios username to /etc/sudoers file with limited access only to /usr/lib64/nagios/plugins/ folder."
-sed -i '$ a nagios ALL=(ALL) NOPASSWD: /usr/lib64/nagios/plugins/' /etc/sudoers &&
+sed -i '$ a nagios ALL=(ALL) NOPASSWD: /usr/lib64/nagios/plugins/' /etc/sudoers ;
 echo "Complete!"
 
 echo "Removing requiretty from /etc/sudoers.. Sudo and Nagios cannot work with this together."
@@ -148,7 +154,7 @@ echo "Complete!"
 
 echo "Removing current plugins installed in /usr/lib64/nagios/plugins folder and installing ours."
 rm -f /usr/lib64/nagios/plugins/* &&
-wget -O /etc/nagios/plugins.tar http://repo.nemanja.io/plugins.tar &&
+wget -O /etc/nagios/plugins.tar http://repo.nemanja.io/plugins.tar ;
 tar -xvf /etc/nagios/plugins.tar -C /usr/lib64/nagios/plugins
 echo "Complete!"
 
