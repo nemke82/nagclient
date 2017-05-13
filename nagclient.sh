@@ -86,6 +86,7 @@ fi
 
 echo "Adding Nagios username to /etc/sudoers file with limited access only to /usr/lib64/nagios/plugins/ folder."
 sed -i '$ a nagios ALL=(ALL) NOPASSWD: /usr/lib64/nagios/plugins/' /etc/sudoers ;
+sed -i '$ a nrpe ALL=(ALL) NOPASSWD: /usr/lib64/nagios/plugins/' /etc/sudoers ;
 echo "Complete!"
 
 echo "Removing requiretty from /etc/sudoers.. Sudo and Nagios cannot work with this together."
