@@ -70,6 +70,7 @@ yum install dnf-plugins-core
 yum config-manager --set-enabled powertools
 dnf install perl-Import-Into
 yum install perl-utf8-all
+yum install compat-openssl10
 yum -y --enablerepo="epel" install nagios-plugins-all nrpe lm_sensors hddtemp
 systemctl restart nrpe
 systemctl enable nrpe
