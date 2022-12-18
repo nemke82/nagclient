@@ -60,6 +60,25 @@ else
 echo "ERROR: Unknown OS Version detected. Aborting Install "
 fi
 
+if [ ${osversion} -eq 8 ];then
+echo "Checking/Installing Epel repository CentOS 8, Nagios Plugins, Nrpe, Lmsensors and Hdd temperateure module."
+echo "Starting nrpe daemon and adding it to the chkconfig for autoboot functionality."
+cd /root
+wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+rpm -Uvh epel-release-latest-8*.rpm
+yum install dnf-plugins-core
+yum config-manager --set-enabled powertools
+dnf install perl-Import-Into
+yum install perl-utf8-all
+yum -y --enablerepo="epel" install nagios-plugins-all nrpe lm_sensors hddtemp
+systemctl restart nrpe
+systemctl enable nrpe
+echo "NOTE: On few CentOS 8 version's I've noticed that PID in nrpe.cfg needs to be changed from /var/run/nrpe.pid to /var/run/nrpe/nrpe.pid"
+echo "      Make sure to check systemctl status nrpe when this is installed to check if daemon is started properly."
+else
+echo "ERROR: Unknown OS Version detected. Aborting Install "
+fi
+
 #Configuration block
 echo "NOTE: What type of server is this? KVM/XEN, OpenVZ or Dedicated?"
 echo "Please enter type as (1 - cloud, 2 - vz or 3 - dedi):"
